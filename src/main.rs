@@ -1,3 +1,14 @@
+use std::io::stdin;
+use std::process::Command;
+
 fn main() {
-    println!("Hello, world!");
+    let mut input = String::new();
+    stdin().read_line(&mut input).unwrap();
+
+    // read_line leaves a trailing newline, which rtim removes
+    let command = input.trim();
+
+    Command::new(command)
+        .spawn()
+        .unwrap();
 }
