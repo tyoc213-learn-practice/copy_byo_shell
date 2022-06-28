@@ -14,9 +14,12 @@ fn repl() {
     stdin().read_line(&mut input).unwrap();
 
     // read_line leaves a trailing newline, which rtim removes
-    let command = input.trim();
+    let mut parts = input.trim().split_whitespace();
+    let mut command = parts.next().unwrap();
+    let args = parts;
 
     let mut child = Command::new(command)
+        .args(args)
         .spawn()
         .unwrap();
 
