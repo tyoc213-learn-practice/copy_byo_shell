@@ -4,6 +4,7 @@ use std::io::stdout;
 use std::io::Write;
 use std::path::Path;
 use std::env;
+use std::process;
 
 fn repl() {
     // use the `>` character as the prompt
@@ -28,15 +29,19 @@ fn repl() {
                 eprintln!("{}", e);
             }
         },
+        "exit" => std::process::exit(0),
         command => {
             let mut child = Command::new(command)
                 .args(args)
-                .spawn()
-                .unwrap();
+                .spawn();
 
-            // don't accept another command until this one completes
-            child.wait();
-        }}
+            // gracefully handle malformed user input
+            match child {
+                Ok(mut child) => { child.wait(); },
+                Err(e) => eprintln!("{}", e),
+            };
+        }
+    }
 }
 
 fn main() {
